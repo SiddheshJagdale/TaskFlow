@@ -8,6 +8,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        outfit: ["Outfit", "sans-serif"],
+        bebas: ["Bebas Neue", "cursive"],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
