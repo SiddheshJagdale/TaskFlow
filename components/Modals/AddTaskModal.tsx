@@ -2,10 +2,12 @@
 
 import { useState, useCallback } from "react";
 import React from "react";
+import { v4 as uuidv4 } from "uuid"; // Import uuid
 import Modal from "../Modal";
 import useAddTask from "@/hooks/useAddTask";
-import { addTask } from "@/store/reducers/taskSlice";
-import { useDispatch } from "react-redux";
+import { saveTaskToFirestore } from "@/store/reducers/taskSlice";
+import { useAppDispatch } from "@/store/hooks"; // Import the typed hook
+import { toast } from "react-toastify";
 
 const AddTaskModal = () => {
   const [taskData, setTaskData] = useState({
@@ -14,12 +16,20 @@ const AddTaskModal = () => {
     date: "",
     important: false,
   });
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const addTaskModal = useAddTask();
 
   const title = "Add New Task";
 
   const handleSubmit = useCallback(() => {
-    dispatch(addTask(taskData));
+    const taskWithId = {
+      ...taskData,
+      id: uuidv4(), // Add unique ID to task
+    };
+
+    dispatch(saveTaskToFirestore(taskWithId));
+
+    // Reset task data and close modal
     setTaskData({
       title: "",
       description: "",
@@ -27,7 +37,8 @@ const AddTaskModal = () => {
       important: false,
     });
     addTaskModal.onClose();
-  }, [taskData]);
+    toast.success("Task created");
+  }, [taskData, dispatch, addTaskModal]);
 
   const Body = (
     <div className="flex flex-col gap-3 justify-center items-start">
@@ -74,7 +85,6 @@ const AddTaskModal = () => {
         <label className="text-sm sm:text-base md:text-xl lg:text-xl xl:text-xl">
           Is this task important?
         </label>
-
         <div className="flex flex-row gap-2">
           <div className="flex flex-row gap-1 items-center">
             <input
@@ -105,19 +115,15 @@ const AddTaskModal = () => {
     </div>
   );
 
-  const addTaskModal = useAddTask();
-
   return (
-    <>
-      <Modal
-        body={Body}
-        title={title}
-        isOpen={addTaskModal.isOpen}
-        onClose={addTaskModal.onClose}
-        onSubmit={handleSubmit} // Fixed
-        submitButton={true}
-      />
-    </>
+    <Modal
+      body={Body}
+      title={title}
+      isOpen={addTaskModal.isOpen}
+      onClose={addTaskModal.onClose}
+      onSubmit={handleSubmit}
+      submitButton={true}
+    />
   );
 };
 

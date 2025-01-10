@@ -14,7 +14,7 @@ export default function TaskGrid() {
         {tasks.map((task: Record<string, any>, index: number) => (
           <TaskCard
             key={index}
-            id={index}
+            id={task.id}
             title={task.title}
             description={task.description}
             duedate={task.date}

@@ -3,11 +3,9 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import AddTaskButton from "./AddTaskButton";
-import useAddTask from "@/hooks/useAddTask";
 
 const Header = () => {
   const pathname = usePathname();
-  const addTaskModal = useAddTask();
 
   const getHeaderTitle = () => {
     switch (pathname) {

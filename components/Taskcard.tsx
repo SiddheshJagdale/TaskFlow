@@ -2,8 +2,9 @@ import React, { useCallback } from "react";
 import { FaStar } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
-import { useDispatch } from "react-redux";
-import { deleteTask } from "../store/reducers/taskSlice";
+import { deleteTaskFromFirestore } from "@/store/reducers/taskSlice";
+import { useAppDispatch } from "@/store/hooks"; // Import the typed hook
+import { toast } from "react-toastify";
 
 interface TaskCardProps {
   title: string;
@@ -11,7 +12,7 @@ interface TaskCardProps {
   isCompleted?: boolean;
   isImportant: boolean;
   duedate: string;
-  id: number;
+  id: string; // Firestore ID
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({
@@ -22,12 +23,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
   duedate,
   id,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleDelete = useCallback(() => {
-    dispatch(deleteTask(id));
-  }, [dispatch]);
-  const editTask = (id: number) => {
+    dispatch(deleteTaskFromFirestore(id)); // Use deleteTaskFromFirestore thunk
+    toast.success("Task deleted");
+  }, [dispatch, id]);
+
+  const editTask = (id: string) => {
     dispatch({ type: "EDIT_TASK", payload: id });
   };
 
