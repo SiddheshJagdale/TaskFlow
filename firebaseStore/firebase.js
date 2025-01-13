@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, setLogLevel } from "firebase/firestore";
 import { getAuth, signInAnonymously } from "firebase/auth";
 import dotenv from "dotenv";
-setLogLevel("debug");
 
 dotenv.config();
 

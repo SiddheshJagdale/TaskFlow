@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback } from "react";
 import { FaStar } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
@@ -5,6 +7,7 @@ import { CiEdit } from "react-icons/ci";
 import { deleteTaskFromFirestore } from "@/store/reducers/taskSlice";
 import { useAppDispatch } from "@/store/hooks"; // Import the typed hook
 import { toast } from "react-toastify";
+import useEditTask from "@/hooks/useEditTask";
 
 interface TaskCardProps {
   title: string;
@@ -12,7 +15,7 @@ interface TaskCardProps {
   isCompleted?: boolean;
   isImportant: boolean;
   duedate: string;
-  id: string; // Firestore ID
+  id: string;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({
@@ -24,15 +27,30 @@ const TaskCard: React.FC<TaskCardProps> = ({
   id,
 }) => {
   const dispatch = useAppDispatch();
+  const editTaskModal = useEditTask();
 
-  const handleDelete = useCallback(() => {
-    dispatch(deleteTaskFromFirestore(id)); // Use deleteTaskFromFirestore thunk
+  const handleDelete = useCallback(async () => {
+    await dispatch(deleteTaskFromFirestore(id));
     toast.success("Task deleted");
   }, [dispatch, id]);
-
-  const editTask = (id: string) => {
-    dispatch({ type: "EDIT_TASK", payload: id });
-  };
+  const handleEdit = useCallback(() => {
+    editTaskModal.onOpen({
+      id,
+      title,
+      description,
+      date: duedate,
+      important: isImportant,
+      isCompleted: false,
+    });
+  }, [
+    editTaskModal,
+    id,
+    title,
+    description,
+    duedate,
+    isImportant,
+    isCompleted,
+  ]);
 
   return (
     <div className="flex flex-col h-full w-full p-6 bg-neutral-800 text-white rounded-lg shadow-md border border-neutral-700">
@@ -61,7 +79,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
           <MdDeleteOutline className="text-white text-xl" />
         </button>
         <button
-          onClick={() => editTask(id)}
+          onClick={handleEdit}
           className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-500 transition"
         >
           <CiEdit className="text-white text-xl" />

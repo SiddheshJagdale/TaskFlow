@@ -15,30 +15,31 @@ const AddTaskModal = () => {
     description: "",
     date: "",
     important: false,
+    isCompleted: false,
   });
   const dispatch = useAppDispatch();
   const addTaskModal = useAddTask();
 
   const title = "Add New Task";
+  const handleSubmit = useCallback(async () => {
+    // const TaskData = {
+    //   taskId: uuidv4(),
 
-  const handleSubmit = useCallback(() => {
-    const taskWithId = {
-      ...taskData,
-      id: uuidv4(), // Add unique ID to task
-    };
+    //   ...taskData,
+    // };
 
-    dispatch(saveTaskToFirestore(taskWithId));
+    await dispatch(saveTaskToFirestore(taskData));
 
-    // Reset task data and close modal
     setTaskData({
       title: "",
       description: "",
       date: "",
       important: false,
+      isCompleted: false,
     });
     addTaskModal.onClose();
     toast.success("Task created");
-  }, [taskData, dispatch, addTaskModal]);
+  }, [taskData, dispatch, addTaskModal, saveTaskToFirestore]);
 
   const Body = (
     <div className="flex flex-col gap-3 justify-center items-start">

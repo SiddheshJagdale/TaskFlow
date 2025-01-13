@@ -5,6 +5,7 @@ import ReduxProvider from "../libs/ReduxProvider";
 import Layout from "../components/Layout";
 import AddTaskModal from "@/components/Modals/AddTaskModal";
 import { ToastContainer } from "react-toastify";
+import EditTaskModal from "@/components/Modals/EditTaskModal";
 
 export const metadata: Metadata = {
   title: "Task Manager",
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <ToastContainer />
         <ReduxProvider>
           <AddTaskModal />
+          <EditTaskModal />
           <Layout>{children}</Layout>
         </ReduxProvider>
       </body>
