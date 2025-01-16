@@ -1,5 +1,3 @@
-
-
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "../Modal";
@@ -32,10 +30,11 @@ const EditTaskModal = () => {
 
   const handleSubmit = useCallback(async () => {
     try {
+      editTaskModal.onClose();
+
       await dispatch(
         editTaskFromFirestore({ taskId: id, updatedData: formState })
       );
-      editTaskModal.onClose();
       toast.success("Task updated");
     } catch (error) {
       console.error("Error updating task:", error);
@@ -62,13 +61,14 @@ const EditTaskModal = () => {
         <p className="text-sm sm:text-base md:text-xl lg:text-xl xl:text-xl">
           Description
         </p>
-        <input
-          type="text"
+        <textarea
           value={formState.description}
+          rows={4}
+          placeholder="Enter description"
+          className="px-2 py-1 rounded-lg border-[2px] text-sm sm:text-base md:text-xl lg:text-xl xl:text-xl"
           onChange={(e) =>
             setFormState({ ...formState, description: e.target.value })
           }
-          className="px-2 py-1 rounded-lg border-[2px] text-sm sm:text-base md:text-xl lg:text-xl xl:text-xl"
         />
       </div>
       <div className="flex flex-col gap-1 w-full">

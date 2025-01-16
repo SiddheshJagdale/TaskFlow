@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react";
 import React from "react";
-import { v4 as uuidv4 } from "uuid"; // Import uuid
 import Modal from "../Modal";
 import useAddTask from "@/hooks/useAddTask";
 import { saveTaskToFirestore } from "@/store/reducers/taskSlice";
@@ -22,11 +21,7 @@ const AddTaskModal = () => {
 
   const title = "Add New Task";
   const handleSubmit = useCallback(async () => {
-    // const TaskData = {
-    //   taskId: uuidv4(),
-
-    //   ...taskData,
-    // };
+    addTaskModal.onClose();
 
     await dispatch(saveTaskToFirestore(taskData));
 
@@ -37,7 +32,6 @@ const AddTaskModal = () => {
       important: false,
       isCompleted: false,
     });
-    addTaskModal.onClose();
     toast.success("Task created");
   }, [taskData, dispatch, addTaskModal, saveTaskToFirestore]);
 
@@ -59,9 +53,9 @@ const AddTaskModal = () => {
         <p className="text-sm sm:text-base md:text-xl lg:text-xl xl:text-xl">
           Description
         </p>
-        <input
-          type="text"
+        <textarea
           value={taskData.description}
+          rows={4}
           placeholder="Enter description"
           className="px-2 py-1 rounded-lg border-[2px] text-sm sm:text-base md:text-xl lg:text-xl xl:text-xl"
           onChange={(e) =>
